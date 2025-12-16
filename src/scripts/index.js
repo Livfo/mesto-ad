@@ -37,6 +37,14 @@ const avatarFormModalWindow = document.querySelector(".popup_type_edit-avatar");
 const avatarForm = avatarFormModalWindow.querySelector(".popup__form");
 const avatarInput = avatarForm.querySelector(".popup__input");
 
+const submitButtonsForm = document.querySelectorAll("form button[type=submit]")
+
+submitButtonsForm.forEach((item) => {
+  item.setAttribute("novalidate", "");
+  item.setAttribute("disabled", "");
+  item.classList.add("popup__button_disabled");
+});
+
 const handlePreviewPicture = ({ name, link }) => {
   imageElement.src = link;
   imageElement.alt = name;
@@ -75,6 +83,8 @@ const handleCardFormSubmit = (evt) => {
 
   closeModalWindow(cardFormModalWindow);
 };
+
+
 
 // EventListeners
 profileForm.addEventListener("submit", handleProfileFormSubmit);
