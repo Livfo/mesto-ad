@@ -9,6 +9,7 @@
 import { initialCards } from "./cards.js";
 import { createCardElement, deleteCard, likeCard } from "./components/card.js";
 import { openModalWindow, closeModalWindow, setCloseModalWindowEventListeners } from "./components/modal.js";
+import { enableValidation, clearValidation } from "./components/validation.js";
 
 // DOM узлы
 const placesWrap = document.querySelector(".places__list");
@@ -37,13 +38,74 @@ const avatarFormModalWindow = document.querySelector(".popup_type_edit-avatar");
 const avatarForm = avatarFormModalWindow.querySelector(".popup__form");
 const avatarInput = avatarForm.querySelector(".popup__input");
 
-const submitButtonsForm = document.querySelectorAll("form button[type=submit]")
+const submitButtonsForm = document.querySelectorAll(".popup__form");
+const submitButtons = document.querySelectorAll(".button[type=submit]");
 
 submitButtonsForm.forEach((item) => {
   item.setAttribute("novalidate", "");
+});
+
+submitButtons.forEach((item) => {
   item.setAttribute("disabled", "");
   item.classList.add("popup__button_disabled");
 });
+
+profileTitleInput.setAttribute("required", "");
+profileTitleInput.setAttribute("minlength", "2");
+profileTitleInput.setAttribute("maxlength", "40");
+profileTitleInput.setAttribute("pattern", "^[A-Za-zА-Яа-яЁё\\s\\-]+$");
+profileTitleInput.setAttribute("data-error-message", "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы");
+
+const nameError = document.createElement("span");
+nameError.classList.add("popup__error");
+nameError.id = "user-name-error";
+profileTitleInput.parentNode.appendChild(nameError);
+
+profileDescriptionInput.setAttribute("required", "");
+profileDescriptionInput.setAttribute("minlength", "2");
+profileDescriptionInput.setAttribute("maxlength", "200");
+
+const descriptionError = document.createElement("span");
+descriptionError.classList.add("popup__error");
+descriptionError.id = "user-description-error";
+profileDescriptionInput.parentNode.appendChild(descriptionError);
+
+avatarInput.setAttribute("required", "");
+const avatarError = document.createElement("span");
+avatarError.id = "user-avatar-error";
+avatarError.classList.add("popup__error");
+avatarInput.parentNode.appendChild(avatarError);
+
+cardNameInput.setAttribute("required", "");
+cardNameInput.setAttribute("minlength", "2");
+cardNameInput.setAttribute("maxlength", "30");
+cardNameInput.setAttribute("pattern", "^[A-Za-zА-Яа-яЁё\\s\\-]+$");
+cardNameInput.setAttribute("data-error-message", "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы");
+const cardNameError = document.createElement("span");
+cardNameError.id = "place-name-error";
+cardNameError.classList.add("popup__error");
+cardNameInput.parentNode.appendChild(cardNameError);
+
+cardLinkInput.setAttribute("required", "");
+const cardLinkError = document.createElement("span");
+cardLinkError.id = "place-link-error";
+cardLinkError.classList.add("popup__error");
+cardLinkInput.parentNode.appendChild(cardLinkError);
+
+// Создание объекта с настройками валидации
+const validationSettings = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible",
+};
+
+// включение валидации вызовом enableValidation
+// все настройки передаются при вызове
+enableValidation(validationSettings); 
+
 
 const handlePreviewPicture = ({ name, link }) => {
   imageElement.src = link;
